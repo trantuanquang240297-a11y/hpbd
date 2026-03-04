@@ -212,57 +212,42 @@ to{opacity:1;}
                 setTimeout(() => typeWriter(text, i + 1), 30);
             }
         }
-let partyMode = false;
-let loopConfetti = null;
-        function celebrate() {
+function celebrate() {
 
-    if (partyMode) return; // tránh bấm nhiều lần
+            document.getElementById("photo").classList.add("color");
+            document.getElementById("music").play();
+            document.getElementById("message").innerHTML = "";
 
-    partyMode = true;
+            let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
+            typeWriter(text);
 
-    const photo = document.getElementById("photo");
-    const music = document.getElementById("music");
-    const message = document.getElementById("message");
+            let duration = 3000;
+            let end = Date.now() + duration;
 
-    photo.classList.add("color");
-    music.play();
+            let interval = setInterval(function () {
+                if (Date.now() > end) return clearInterval(interval);
+                confetti({ particleCount: 7, angle: 60, spread: 70, origin: { x: 0 } });
+                confetti({ particleCount: 7, angle: 120, spread: 70, origin: { x: 1 } });
+            }, 200);
 
-    message.innerHTML = "";
-    let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
-    typeWriter(text);
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
 
-
-    confetti({
-        particleCount: 200,
-        spread: 120,
-        origin: { y: 0.6 }
-    });
-
-  
-    loopConfetti = setInterval(() => {
-
-        confetti({
-            particleCount: 120,
-            spread: 100,
-            origin: { y: 0.6 }
-        });
-
-        confetti({
-            particleCount: 20,
-            angle: 60,
-            spread: 70,
-            origin: { x: 0 }
-        });
-
-        confetti({
-            particleCount: 20,
-            angle: 120,
-            spread: 70,
-            origin: { x: 1 }
-        });
-
-    }, 4000);
-}
+            for (let i = 0; i < 30; i++) {
+                confetti({
+                    particleCount: 1,
+                    startVelocity: 30,
+                    spread: 360,
+                    ticks: 60,
+                    shapes: ["circle"],
+                    origin: { x: 0.5, y: 0.6 },
+                    colors: ["#ff4d6d"]
+                });
+            }
+        }
     </script>
 
 </body>
