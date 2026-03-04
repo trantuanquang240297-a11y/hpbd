@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(-45deg,#f8ede3,#e8d5c4,#dfc8ff,#ffd6e8);
+background-size:400% 400%;
+animation:bgMove 12s ease infinite;
+overflow:hidden;
+}
+
+@keyframes bgMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.card{
+background:rgba(255,255,255,0.95);
+padding:25px;
+border-radius:25px;
+text-align:center;
+box-shadow:0 20px 60px rgba(0,0,0,0.2);
+backdrop-filter:blur(10px);
+display:none;
+width:320px;
+z-index:2;
+}
+
+img{
+width:100%;
+height:320px;
+object-fit:cover;
+border-radius:20px;
+filter:grayscale(100%);
+transition:1.5s;
+}
+
+.color{
+filter:grayscale(0%);
+transform:scale(1.05);
+}
+
+button{
+margin-top:12px;
+padding:10px 22px;
+border:none;
+border-radius:25px;
+background:#c6a5ff;
+color:white;
+cursor:pointer;
+font-size:14px;
+transition:0.3s;
+}
+
+button:hover{background:#a67dff;}
+
+#message{
+position:relative;
+overflow:hidden;
+margin-top:15px;
+min-height:80px;
+font-size:16px;
+font-weight:600;
+text-align:center;
+
+background: linear-gradient(90deg,#ff4d6d,#c77dff,#4cc9f0,#ff4d6d);
+background-size:300%;
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+
+animation:gradientMove 5s linear infinite, floatText 3s ease-in-out infinite;
+}
+
+@keyframes gradientMove{
+0%{background-position:0%;}
+100%{background-position:300%;}
+}
+
+@keyframes floatText{
+0%{transform:translateY(0px);}
+50%{transform:translateY(-6px);}
+100%{transform:translateY(0px);}
+}
+
+#message::after{
+content:'';
+position:absolute;
+top:0;
+left:-100%;
+width:100%;
+height:100%;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,0.7),transparent);
+animation:shine 3s infinite;
+}
+
+@keyframes shine{
+100%{left:100%;}
+}
+
+#lock{text-align:center;z-index:3;}
+input{
+padding:10px;
+border-radius:20px;
+border:none;
+text-align:center;
+outline:none;
+}
+
+#error{
+color:#ff4d6d;
+font-size:13px;
+margin-top:8px;
+opacity:0;
+transition:0.3s;
+}
+
+.star{
+position:fixed;
+width:3px;
+height:3px;
+background:white;
+border-radius:50%;
+animation:blink 2s infinite alternate;
+}
+
+@keyframes blink{
+from{opacity:0.2;}
+to{opacity:1;}
+}
+    </style>
+</head>
+<body>
+
+    <div id="lock">
+        <h3>Nhập ngày sinh để mở 🎁</h3>
+        <input type="password" id="pass" placeholder="VD: 0101">
+        <br><br>
+        <button onclick="unlock()">Mở</button>
+        <div id="error"></div>
+    </div>
+
+    <div class="card" id="main">
+        <img id="photo" src="ngoc.jpg">
+        <h2>Happy Birthday 🎂</h2>
+        <button onclick="celebrate()">Mở bất ngờ 🎉</button>
+        <div id="message"></div>
+    </div>
+
+    <audio id="music" src="VexentoFlare.wav"></audio>
+
+    <script>
+        let attempts = 0;
+        let lockTime = false;
+
+        for (let i = 0; i < 60; i++) {
+            let star = document.createElement("div");
+            star.className = "star";
+            star.style.top = Math.random() * 100 + "%";
+            star.style.left = Math.random() * 100 + "%";
+            star.style.animationDuration = (Math.random() * 3 + 1) + "s";
+            document.body.appendChild(star);
+        }
+
+        function unlock() {
+            if (lockTime) return;
+
+            const pass = document.getElementById("pass").value;
+            const error = document.getElementById("error");
+
+            if (pass === "0403") {
+                document.getElementById("lock").style.display = "none";
+                document.getElementById("main").style.display = "block";
+                error.style.opacity = "0";
+            }
+            else {
+                attempts++;
+                error.innerText = "Sai mật mã 😌";
+                error.style.opacity = "1";
+
+                if (attempts >= 3) {
+                    lockTime = true;
+                    error.innerText = "Sai 3 lần 😅 đợi 10 giây nhé";
+                    setTimeout(() => {
+                        lockTime = false;
+                        attempts = 0;
+                        error.style.opacity = "0";
+                    }, 10000);
+                }
+            }
+        }
+
+        document.getElementById("pass").addEventListener("keypress", function (e) {
+            if (e.key === "Enter") unlock();
+        });
+
+        function typeWriter(text, i = 0) {
+            if (i < text.length) {
+                document.getElementById("message").innerHTML += text.charAt(i);
+                setTimeout(() => typeWriter(text, i + 1), 30);
+            }
+        }
+
+        function celebrate() {
+
+            document.getElementById("photo").classList.add("color");
+            document.getElementById("music").play();
+            document.getElementById("message").innerHTML = "";
+
+            let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
+            typeWriter(text);
+
+            let duration = 3000;
+            let end = Date.now() + duration;
+
+            let interval = setInterval(function () {
+                if (Date.now() > end) return clearInterval(interval);
+                confetti({ particleCount: 7, angle: 60, spread: 70, origin: { x: 0 } });
+                confetti({ particleCount: 7, angle: 120, spread: 70, origin: { x: 1 } });
+            }, 200);
+
+            confetti({
+                particleCount: 150,
+                spread: 100,
+                origin: { y: 0.6 }
+            });
+
+            for (let i = 0; i < 30; i++) {
+                confetti({
+                    particleCount: 1,
+                    startVelocity: 30,
+                    spread: 360,
+                    ticks: 60,
+                    shapes: ["circle"],
+                    origin: { x: 0.5, y: 0.6 },
+                    colors: ["#ff4d6d"]
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>
