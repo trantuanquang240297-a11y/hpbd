@@ -212,42 +212,59 @@ to{opacity:1;}
                 setTimeout(() => typeWriter(text, i + 1), 30);
             }
         }
+let confettiInterval = null;
+
 function celebrate() {
 
-            document.getElementById("photo").classList.add("color");
-            document.getElementById("music").play();
-            document.getElementById("message").innerHTML = "";
+    const photo = document.getElementById("photo");
+    const music = document.getElementById("music");
+    const message = document.getElementById("message");
 
-            let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
-            typeWriter(text);
+    // Reset nội dung
+    message.innerHTML = "";
+    photo.classList.remove("color");
 
-            let duration = 3000;
-            let end = Date.now() + duration;
+    // Reset nhạc nếu đang chạy
+    music.pause();
+    music.currentTime = 0;
 
-            let interval = setInterval(function () {
-                if (Date.now() > end) return clearInterval(interval);
-                confetti({ particleCount: 7, angle: 60, spread: 70, origin: { x: 0 } });
-                confetti({ particleCount: 7, angle: 120, spread: 70, origin: { x: 1 } });
-            }, 200);
+    // Xoá interval cũ nếu có
+    if (confettiInterval) {
+        clearInterval(confettiInterval);
+        confettiInterval = null;
+    }
 
-            confetti({
-                particleCount: 150,
-                spread: 100,
-                origin: { y: 0.6 }
-            });
+    // Delay nhẹ cho hiệu ứng mượt
+    setTimeout(() => {
+        photo.classList.add("color");
+        music.play();
 
-            for (let i = 0; i < 30; i++) {
-                confetti({
-                    particleCount: 1,
-                    startVelocity: 30,
-                    spread: 360,
-                    ticks: 60,
-                    shapes: ["circle"],
-                    origin: { x: 0.5, y: 0.6 },
-                    colors: ["#ff4d6d"]
-                });
+        let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
+        typeWriter(text);
+
+        let duration = 3000;
+        let end = Date.now() + duration;
+
+        confettiInterval = setInterval(function () {
+            if (Date.now() > end) {
+                clearInterval(confettiInterval);
+                confettiInterval = null;
+                return;
             }
-        }
+
+            confetti({ particleCount: 7, angle: 60, spread: 70, origin: { x: 0 } });
+            confetti({ particleCount: 7, angle: 120, spread: 70, origin: { x: 1 } });
+
+        }, 200);
+
+        confetti({
+            particleCount: 150,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+
+    }, 200);
+}
     </script>
 
 </body>
