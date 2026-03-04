@@ -212,58 +212,56 @@ to{opacity:1;}
                 setTimeout(() => typeWriter(text, i + 1), 30);
             }
         }
-let confettiInterval = null;
-
+        let partyMode = false;
+let loopConfetti = null;
 function celebrate() {
+
+    if (partyMode) return; // tránh bấm nhiều lần
+
+    partyMode = true;
 
     const photo = document.getElementById("photo");
     const music = document.getElementById("music");
     const message = document.getElementById("message");
 
-    // Reset nội dung
+    photo.classList.add("color");
+    music.play();
+
     message.innerHTML = "";
-    photo.classList.remove("color");
+    let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
+    typeWriter(text);
 
-    // Reset nhạc nếu đang chạy
-    music.pause();
-    music.currentTime = 0;
+    // Bắn pháo lần đầu mạnh
+    confetti({
+        particleCount: 200,
+        spread: 120,
+        origin: { y: 0.6 }
+    });
 
-    // Xoá interval cũ nếu có
-    if (confettiInterval) {
-        clearInterval(confettiInterval);
-        confettiInterval = null;
-    }
-
-    // Delay nhẹ cho hiệu ứng mượt
-    setTimeout(() => {
-        photo.classList.add("color");
-        music.play();
-
-        let text = "Chúc em tuổi mới nắng đầy vai. Ước mơ còn dở sớm mai vẹn tròn. Bình yên ở giữa tâm hồn. Niềm vui ở lại, muộn buồn rời xa. 🎂✨";
-        typeWriter(text);
-
-        let duration = 3000;
-        let end = Date.now() + duration;
-
-        confettiInterval = setInterval(function () {
-            if (Date.now() > end) {
-                clearInterval(confettiInterval);
-                confettiInterval = null;
-                return;
-            }
-
-            confetti({ particleCount: 7, angle: 60, spread: 70, origin: { x: 0 } });
-            confetti({ particleCount: 7, angle: 120, spread: 70, origin: { x: 1 } });
-
-        }, 200);
+    // Sau đó tự lặp mỗi 4 giây
+    loopConfetti = setInterval(() => {
 
         confetti({
-            particleCount: 150,
+            particleCount: 120,
             spread: 100,
             origin: { y: 0.6 }
         });
 
-    }, 200);
+        confetti({
+            particleCount: 20,
+            angle: 60,
+            spread: 70,
+            origin: { x: 0 }
+        });
+
+        confetti({
+            particleCount: 20,
+            angle: 120,
+            spread: 70,
+            origin: { x: 1 }
+        });
+
+    }, 4000);
 }
     </script>
 
